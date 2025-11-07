@@ -1,16 +1,10 @@
-<x-admin-layout :breadcrumbs="
-[
+<x-admin-layout :breadcrumbs="[
     [
-    
-    'name' => 'Dashboard',
-    'href' => route('admin.dashboard'),
-],
-    [    
-    'name' => 'Profile' ],]">
+        'name'=>'Dashboard',
+        'href'=> route('admin.dashboard'),
+    ],
 
-    
-
-
-holaa iris
-
+    ['name' => 'Profile'],
+]">
+ Hola iris
 </x-admin-layout>
