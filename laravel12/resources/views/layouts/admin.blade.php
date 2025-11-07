@@ -20,14 +20,15 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         <script src="https://kit.fontawesome.com/32ef592ab6.js" crossorigin="anonymous"></script>
+        {{-- incluir sweetalert2 --}}
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
         <wireui:scripts />
         <!-- Styles -->
         @livewireStyles
     </head>
     <body class="font-sans antialiased bg-gray-50">
-        <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
-     
+        
      @include('layouts.includes.admin.navigation')
 
      @include('layouts.includes.admin.sidebar')
@@ -49,6 +50,19 @@
         @stack('modals')
 
         @livewireScripts
-
+        <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+      
+{{-- incluir alerta de sweetalert2 --}}
+@if (session('swal'))
+<script>
+    Swal.fire({
+        icon: '{{ session('swal.icon') }}',
+        title: '{{ session('swal.title') }}',
+        text: '{{ session('swal.text') }}',
+        confirmButtonText: 'OK'
+    });
+</script>
+@endif
+<script>
     </body>
 </html>
