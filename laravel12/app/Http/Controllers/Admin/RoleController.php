@@ -8,101 +8,117 @@ use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        return view('admin.roles.index');
+        $roles = Role::all();
+        return view('admin.roles.index', compact('roles'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return view('admin.roles.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        // ✅ Validar los datos
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:roles,name',
-            'description' => 'nullable|string|max:1000',
         ]);
 
-        // ✅ Crear el rol usando Spatie
-        $role = Role::create([
+        Role::create([
             'name' => $validated['name'],
         ]);
 
-        //variable de un solo uso
-        session()->flash('swal', 
-            [
-                'icon' => 'success',
-                'title' => 'Éxito',
-                'text' => 'Rol creado correctamente.'
-            ]
-        );
+        session()->flash('swal', [
+            'icon' => 'success',
+            'title' => 'Éxito',
+            'text' => 'Rol creado correctamente.',
+        ]);
 
-     
-        // ✅ Redireccionar con mensaje de éxito
-        return redirect()
-            ->route('admin.roles.index')
-            ->with('success', 'Rol creado correctamente.');
+        return redirect()->route('admin.roles.index');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Role $role)
     {
         return view('admin.roles.show', compact('role'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Role $role)
     {
+        // 🚫 Evitar edición de los primeros 9 roles
+        if ($role->id <= 9) {
+            session()->flash('swal', [
+                'icon' => 'error',
+                'title' => 'Acción no permitida',
+                'text' => 'Este rol no puede ser editado.',
+            ]);
+
+            return redirect()->route('admin.roles.index');
+        }
+
         return view('admin.roles.edit', compact('role'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Role $role)
     {
+        // 🚫 Evitar actualización de los primeros 9 roles
+        if ($role->id <= 9) {
+            session()->flash('swal', [
+                'icon' => 'error',
+                'title' => 'Acción no permitida',
+                'text' => 'Este rol no puede ser modificado.',
+            ]);
+
+            return redirect()->route('admin.roles.index');
+        }
+
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:roles,name,' . $role->id,
-            'description' => 'nullable|string|max:1000',
         ]);
+
+        // ✅ Verificar si hubo cambios
+        if ($role->name === $validated['name']) {
+            session()->flash('swal', [
+                'icon' => 'info',
+                'title' => 'Sin cambios',
+                'text' => 'No se detectaron modificaciones en el rol.',
+            ]);
+
+            return redirect()->back();
+        }
 
         $role->update(['name' => $validated['name']]);
 
-        if (isset($validated['description'])) {
-            $role->description = $validated['description'];
-            $role->save();
-        }
+        session()->flash('swal', [
+            'icon' => 'success',
+            'title' => 'Actualizado',
+            'text' => 'El rol se actualizó correctamente.',
+        ]);
 
-        return redirect()
-            ->route('admin.roles.index')
-            ->with('success', 'Rol actualizado correctamente.');
+        return redirect()->route('admin.roles.index');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Role $role)
     {
+        // 🚫 Evitar eliminación de los primeros 9 roles
+        if ($role->id <= 9) {
+            session()->flash('swal', [
+                'icon' => 'error',
+                'title' => 'Acción no permitida',
+                'text' => 'Este rol es esencial y no puede eliminarse.',
+            ]);
+
+            return redirect()->route('admin.roles.index');
+        }
+
         $role->delete();
 
-        return redirect()
-            ->route('admin.roles.index')
-            ->with('success', 'Rol eliminado correctamente.');
+        session()->flash('swal', [
+            'icon' => 'success',
+            'title' => 'Eliminado',
+            'text' => 'El rol fue eliminado correctamente.',
+        ]);
+
+        return redirect()->route('admin.roles.index');
     }
 }
