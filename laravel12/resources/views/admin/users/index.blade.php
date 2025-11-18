@@ -4,7 +4,7 @@
         'href'=> route('admin.dashboard'),
     ],
 
-    ['name' => 'Profile'],
+    ['name' => 'Usuarios'],
 ]">
  <x-slot name="action">
 
@@ -14,4 +14,5 @@
 </x-wire-button>
 
 </x-slot>
+@livewire('admin.datatables.user-table')
 </x-admin-layout>
