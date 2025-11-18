@@ -11,6 +11,7 @@
 ]">
 
 <x-wire-card>
+<<<<<<< HEAD
 <form action="{{route('admin.roles.store')}}" method="POST">
 @csrf
 <x-wire-input
@@ -26,4 +27,22 @@ value="{{old('name')}}">
 </form>
 </x-wire-card>
 
+=======
+    <form action="{{route('admin.roles.store')}}" method="POST">
+
+@csrf
+<x-wire-input 
+label="Nombre" name="name" placeholder="Nombre de rol" value="{{old ('name')}}">
+
+</x-wire-input>
+<div class="flex justify-end mt-4">
+ <x-wire-button type="submit" bllue>Guardar</x-wire-button>
+</div>
+
+</form> 
+
+</x-wire-card>
+
+
+>>>>>>> c0f97f450c60019401936b22d6e78c37cb6ecdbe
 </x-admin-layout>
